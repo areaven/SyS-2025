@@ -1,0 +1,2779 @@
+>> help diary
+'diary' is a built-in function from the file libinterp/corefcn/pager.cc
+
+ -- diary
+ -- diary on
+ -- diary off
+ -- diary FILENAME
+ -- [STATUS, DIARYFILE] = diary
+     Record a list of all commands _and_ the output they produce, mixed
+     together just as they appear on the terminal.
+
+     Valid options are:
+
+     on
+          Start recording a session in a file called ‘diary’ in the
+          current working directory.
+
+     off
+          Stop recording the session in the diary file.
+
+     FILENAME
+          Record the session in the file named FILENAME.
+
+     With no input or output arguments, ‘diary’ toggles the current
+     diary state.
+
+     If output arguments are requested, ‘diary’ ignores inputs and
+     returns the current status.  The boolean STATUS indicates whether
+     recording is on or off, and DIARYFILE is the name of the file where
+     the session is stored.
+
+     See also: history, evalc.
+
+Additional help for built-in functions and operators is
+available in the online version of the manual.  Use the command
+'doc <topic>' to search the manual index.
+
+Help and information about Octave is also available on the WWW
+at https://www.octave.org and via the help@octave.org
+mailing list.
+>> print test
+error: print: no figure to print
+error: called from
+    print at line 467 column 5
+>> print "test"
+error: print: no figure to print
+error: called from
+    print at line 467 column 5
+>> help print
+'print' is a function from the file /usr/share/octave/9.4.0/m/plot/util/print.m
+
+ -- print ()
+ -- print (OPTIONS)
+ -- print (FILENAME, OPTIONS)
+ -- print (HFIG, ...)
+ -- RGB = print ("-RGBImage", ...)
+     Format a figure for printing and either save it to a file, send it
+     to a printer, or return an RGB image.
+
+     FILENAME defines the name of the output file.  If the filename has
+     no suffix then one is inferred from the specified device and
+     appended to the filename.  When neither a filename nor the
+     "-RGBImage" option is present, the output is sent to the printer.
+     The various options and filename arguments may be given in any
+     order, except for the figure handle argument HFIG which must be
+     first if it is present.
+
+     Example: Print to a file using PDF and JPEG formats.
+
+          figure (1);
+          clf ();
+          surf (peaks);
+          print figure1.pdf    # The extension specifies the format
+          print -djpg figure1  # Will produce "figure1.jpg" file
+
+     If the first argument is a handle HFIG to a figure object then it
+     specifies the figure to print.  By default, the current figure
+     returned by ‘gcf’ is printed.
+
+     For outputs to paged formats, for example, PostScript and PDF, the
+     page size is specified by the figure's ‘papersize’ property
+     together with the ‘paperunits’ property.  The location and size of
+     the plot on the page are specified by the figure's ‘paperposition’
+     property.  The orientation of the page is specified by the figure's
+     ‘paperorientation’ property.
+
+     For non-page formats--for example, image formats like JPEG--the
+     width and height of the output are specified by the figure's
+     ‘paperposition(3:4)’ property values.
+
+     The ‘print’ command supports many OPTIONS:
+
+     ‘-fH’
+          Specify the handle, H, of the figure to be printed.
+
+          Example: Print figure 1.
+
+               figure (1);
+               clf ();
+               surf (peaks);
+               figure (2);
+               print -f1 figure1.pdf
+               ## Equivalent functional form:
+               print (1, "figure1.pdf")
+
+     ‘-PPRINTER’
+          Set the PRINTER name to which the plot is sent if no FILENAME
+          is specified.
+
+          Example: Print to printer named PS_printer using PostScript
+          format.
+
+               clf ();
+               surf (peaks);
+               print -dpswrite -PPS_printer
+
+     ‘-RGBImage’
+          Return an M-by-N-by-3 RGB image of the figure.  The size of
+          the image depends on the formatting options.  This is similar
+          to taking a screen capture of the plot, but formatting options
+          may be changed such as the resolution or monochrome/color.
+
+          Example: Get the pixels of a figure image.
+
+               clf ();
+               surf (peaks);
+               RGB = print ("-RGBImage");
+
+     ‘-image | -opengl’
+     ‘-vector | -painters’
+          Specifies whether the pixel-based renderer (‘-image’ or
+          ‘-opengl’) or vector-based renderer (‘-vector’ or ‘-painters’)
+          is used.  This is equivalent to changing the figure's
+          "Renderer" property.  When the figure "RendererMode" property
+          is "auto" (the default) Octave will use the "opengl" renderer
+          for raster formats (e.g., JPEG) and "painters" for vector
+          formats (e.g., PDF).  These options are only supported for the
+          "qt" graphics toolkit.
+
+     ‘-svgconvert (default)’
+     ‘-nosvgconvert’
+          When using the ‘-painters’ renderer, this enables or disables
+          the SVG based backend toolchain with enhanced characteristics:
+
+          Font handling:
+               For interpreters "none" and "tex", the actual font is
+               embedded in the output file which allows for printing
+               arbitrary characters and fonts in all vector formats.
+
+               Strings using the "latex" interpreter, are rendered using
+               path objects.  This looks good but note that textual info
+               (font, characters...) are lost.
+
+          Output Simplification:
+               By default, the option ‘-painters’ renders patch and
+               surface objects using assemblies of triangles.  This may
+               lead to anti-aliasing artifacts when viewing the file.
+               The ‘-svgconvert’ option reconstructs polygons in order
+               to avoid those artifacts (particularly for 2-D figures).
+
+          Transparency:
+               Allows for printing transparent graphics objects in PDF
+               format.  For PostScript formats the presence of any
+               transparent object will cause the output to be
+               rasterized.
+
+          Caution: If Octave was built against Qt version earlier than
+          5.13, ‘-svgconvert’ may lead to inaccurate rendering of image
+          objects.
+
+     ‘-polymerge’
+     ‘-nopolymerge’
+     ‘-polymerge-all’
+          When using the SVG based backend ‘-svgconvert’, faces are
+          rendered as triangles.  In some cases, some viewers might
+          display fine lines where those triangles share an edge.  These
+          options control whether all triangles that share edges are
+          merged into polygons (‘-polymerge-all’ which might take some
+          time for graphics consisting of many triangles - including
+          line markers), only consecutive polygons are merged
+          (‘-polymerge’), or no triangles are merged at all
+          (‘-no-polymerge’).  By default, only consecutive triangles
+          sharing an edge are merged, unless the printed figure contains
+          patch or surface graphics objects in which case all triangles
+          that are sharing an edge are merged.
+
+     ‘-portrait’
+     ‘-landscape’
+          Specify the orientation of the plot for printed output.  For
+          non-printed output the aspect ratio of the output corresponds
+          to the plot area defined by the "paperposition" property in
+          the orientation specified.  This option is equivalent to
+          changing the figure's "paperorientation" property.
+
+     ‘-fillpage’
+     ‘-bestfit’
+          When using a page-based format (PDF, PostScript, printer)
+          ignore the "paperposition" property and have the plot occupy
+          the entire page.  The option ‘-fillpage’ will stretch the plot
+          to occupy the page with 0.25 inch margins all around.  The
+          option ‘-bestfit’ will expand the plot to take up as much room
+          as possible on the page *without* distorting the original
+          aspect ratio of the plot.
+
+     ‘-color’
+     ‘-mono’
+          Color or monochrome output.
+
+     ‘-solid’
+     ‘-dashed’
+          Force all lines to be solid or dashed, respectively.
+
+     ‘-noui’
+          Don't print uicontrol objects such as pushbuttons which may
+          overlay the plot.  This is the default behavior and it is not
+          possible to include uicontrol objects in the output without
+          using an external screen capture tool.
+
+     ‘-rNUM’
+          Resolution of bitmaps in dots per inch (DPI). For both
+          metafiles and SVG the default is the screen resolution; for
+          other formats the default is 150 DPI.  To specify screen
+          resolution, use "-r0".
+
+          Example: high resolution raster output.
+
+               clf ();
+               surf (peaks (), "facelighting", "gouraud");
+               light ();
+               print ("-r600", "lit_peaks.png");
+
+     ‘-SXSIZE,YSIZE’
+          Plot size in pixels for raster formats including PNG, JPEG,
+          PNG, and _unusually_ SVG.  For all vector formats, including
+          PDF, PS, and EPS, the plot size is specified in points.  This
+          option is equivalent to changing the width and height of the
+          output by setting the figure property ‘paperposition(3:4)’.
+          When using the command form of the print function you must
+          quote the XSIZE,YSIZE option to prevent the Octave interpreter
+          from recognizing the embedded comma (',').  For example, by
+          writing "-S640,480".
+
+     ‘-tight’
+     ‘-loose’
+          Force a tight or loose bounding box for EPS files.  The
+          default is tight.
+
+     ‘-PREVIEW’
+          Add a preview to EPS files.  Supported formats are:
+
+          ‘-interchange’
+               Provide an interchange preview.
+
+          ‘-metafile’
+               Provide a metafile preview.
+
+          ‘-pict’
+               Provide a pict preview.
+
+          ‘-tiff’
+               Provide a TIFF preview.
+
+     ‘-append’
+          Append PostScript or PDF output to an existing file of the
+          same type.
+
+     ‘-FFONTNAME’
+     ‘-FFONTNAME:SIZE’
+     ‘-F:SIZE’
+          Use FONTNAME and/or FONTSIZE for all text.  FONTNAME is
+          ignored for some devices: fig, etc.
+
+     ‘-dDEVICE’
+          The available output format is specified by the option DEVICE,
+          and is one of the following (devices marked with a '*' are
+          only available with the Gnuplot toolkit):
+
+          Vector Formats
+
+          ‘svg’
+               Scalable Vector Graphics.
+
+          ‘pdf’
+          ‘pdfcrop’
+               Portable Document Format.  The ‘pdf’ device formats the
+               figure for printing on paper.  The size of the
+               surrounding page and the position of the figure inside
+               the page are defined by the paper* figure properties.
+
+               Use ‘pdfcrop’ if you don't want the surrounding page.
+
+               Caution: with ‘-nosvgconvert’ option, PDF inherits the
+               same limitations as PostScript (limited set of fonts and
+               lack of transparency).
+
+          ‘eps(2)’
+          ‘epsc(2)’
+               Encapsulated PostScript (level 1 and 2, mono and color).
+
+               The OpenGL-based graphics toolkits always generate
+               PostScript level 3.0.  They have limited support for text
+               unless using the ‘-svgconvert’ option (the default).
+               Limitations include using only ASCII characters (e.g., no
+               Greek letters) and support for just three base PostScript
+               fonts: Helvetica (the default), Times, or Courier.  Any
+               other font will be replaced by Helvetica.
+
+          ‘ps(2)’
+          ‘psc(2)’
+               Same as ‘eps’ except that the figure is formatted for
+               printing on paper.  The size of the surrounding page and
+               position of the figure inside the page are defined by the
+               paper* figure properties.
+
+          ‘pslatex’
+          ‘epslatex’
+          ‘pdflatex’
+          ‘pslatexstandalone’
+          ‘epslatexstandalone’
+          ‘pdflatexstandalone’
+               Generate a LaTeX file ‘FILENAME.tex’ for the text
+               portions of a plot and a file ‘FILENAME.(ps|eps|pdf)’ for
+               the remaining graphics.  The graphics file suffix
+               .ps|eps|pdf is determined by the specified device type.
+               The LaTeX file produced by the ‘standalone’ option can be
+               processed directly by LaTeX.  The file generated without
+               the ‘standalone’ option is intended to be included from
+               another LaTeX document.  In either case, the LaTeX file
+               contains an ‘\includegraphics’ command so that the
+               generated graphics file is automatically included when
+               the LaTeX file is processed.  The text that is written to
+               the LaTeX file contains the strings *exactly* as they
+               were specified in the plot.  If any special characters of
+               the TeX mode interpreter were used, the file must be
+               edited before LaTeX processing.  Specifically, the
+               special characters must be enclosed with dollar signs
+               (‘$ ... $’), and other characters that are recognized by
+               LaTeX may also need editing (e.g., braces).  The
+               ‘pdflatex’ device, and any of the ‘standalone’ formats,
+               are not available with the Gnuplot toolkit.
+
+          ‘epscairo*’
+          ‘pdfcairo*’
+          ‘epscairolatex*’
+          ‘pdfcairolatex*’
+          ‘epscairolatexstandalone*’
+          ‘pdfcairolatexstandalone*’
+               Generate output with Cairo renderer.  The devices
+               ‘epscairo’ and ‘pdfcairo’ are synonymous with the ‘epsc’
+               device.  The LaTeX variants generate a LaTeX file,
+               ‘FILENAME.tex’, for the text portions of a plot, and an
+               image file, ‘FILENAME.(eps|pdf)’, for the graph portion
+               of the plot.  The ‘standalone’ variants behave as
+               described for ‘epslatexstandalone’ above.
+
+          ‘canvas*’
+               Javascript-based drawing on an HTML5 canvas viewable in a
+               web browser.
+
+          ‘emf’
+          ‘meta’
+               Microsoft Enhanced Metafile
+
+          ‘fig’
+               XFig.  For the Gnuplot graphics toolkit, the additional
+               options ‘-textspecial’ or ‘-textnormal’ (default) can be
+               used to control whether the special flag should be set
+               for the text in the figure.
+
+          ‘latex*’
+          ‘eepic*’
+               LaTeX picture environment and extended picture
+               environment.
+
+          ‘tikz’
+          ‘tikzstandalone*’
+               Generate a LaTeX file using PGF/TikZ format.  The
+               OpenGL-based toolkits create a PGF file while Gnuplot
+               creates a TikZ file.  The ‘tikzstandalone’ device
+               produces a LaTeX document which includes the TikZ file.
+
+          Raster Formats
+
+          ‘png’
+               Portable Network Graphics
+
+          ‘jpg’
+          ‘jpeg’
+               JPEG image
+
+          ‘tif’
+          ‘tiff’
+          ‘tiffn’
+               TIFF image with LZW compression (tif, tiff) or
+               uncompressed (tiffn).
+
+          ‘gif’
+               GIF image
+
+          ‘pbm’
+               PBMplus
+
+          ‘dumb*’
+               ASCII art
+
+          If the device is omitted, it is inferred from the file
+          extension, or if there is no filename then it is sent to the
+          printer as PostScript.
+
+     ‘-dGHOSTSCRIPT_DEVICE’
+          Additional devices are supported by Ghostscript.  Some
+          examples are:
+
+          ‘ljet2p’
+               HP LaserJet IIP
+
+          ‘pcx24b’
+               24-bit color PCX file format
+
+          ‘ppm’
+               Portable Pixel Map file format
+
+          For a complete list of available formats and devices type
+          ‘system ("gs -h")’.
+
+          When Ghostscript output is sent to a printer the size is
+          determined by the figure's "papersize" property.  When the
+          output is sent to a file the size is determined by the plot
+          box defined by the figure's "paperposition" property.
+
+     ‘-GGHOSTSCRIPT_COMMAND’
+          Specify the command for calling Ghostscript.  For Unix the
+          default is "gs" and for Windows it is "gswin32c".
+
+     ‘-TextAlphaBits=N’
+     ‘-GraphicsAlphaBits=N’
+          Octave is able to produce output for various printers,
+          bitmaps, and vector formats by using Ghostscript.  For bitmap
+          and printer output anti-aliasing is applied using
+          Ghostscript's TextAlphaBits and GraphicsAlphaBits options.
+          The default number of bits are 4 and 1 respectively.  Allowed
+          values for N are 1, 2, or 4.
+
+     ‘-no-append-file-extension’
+          With this option, FILENAME is used verbatim.  That means no
+          file extension matching the file format is appended
+          automatically.
+
+     See also: saveas, getframe, savefig, hgsave, orient, figure.
+
+Additional help for built-in functions and operators is
+available in the online version of the manual.  Use the command
+'doc <topic>' to search the manual index.
+
+Help and information about Octave is also available on the WWW
+at https://www.octave.org and via the help@octave.org
+mailing list.
+>> disp
+error: Invalid call to disp.  Correct usage is:
+
+ -- disp (X)
+ -- STR = disp (X)
+
+Additional help for built-in functions and operators is
+available in the online version of the manual.  Use the command
+'doc <topic>' to search the manual index.
+
+Help and information about Octave is also available on the WWW
+at https://www.octave.org and via the help@octave.org
+mailing list.
+>> disp("hola")
+hola
+>> disp("test")
+test
+>> (1+2j)*(1-2i)
+ans = 5
+>> (2+2j)*(2-2i)
+ans = 8
+>> 45*(56+i)-34*(16-32*j)
+ans =  1976 + 1133i
+>> wow
+error: 'wow' undefined near line 1, column 1
+>> 1+2i 1-3i
+error: parse error:
+
+  syntax error
+
+>>> 1+2i 1-3i
+         ^
+>> [1+2i 1-3i]
+ans =
+
+   1 + 2i   1 - 3i
+
+>> v =[1+2i 1-3i]
+v =
+
+   1 + 2i   1 - 3i
+
+>> v'
+ans =
+
+   1 - 2i
+   1 + 3i
+
+>> v''
+ans =
+
+   1 + 2i   1 - 3i
+
+>> v'''''
+ans =
+
+   1 - 2i
+   1 + 3i
+
+>> v = [1+2i, 1-3i]
+v =
+
+   1 + 2i   1 - 3i
+
+>> u = [1+2i;1-3i]
+u =
+
+   1 + 2i
+   1 - 3i
+
+>> u*v
+ans =
+
+  -3 + 4i   7 - 1i
+   7 - 1i  -8 - 6i
+
+>> u*v'
+error: operator *: nonconformant arguments (op1 is 2x1, op2 is 2x1)
+>> u'*v'
+ans = -11 +  2i
+>> v*u
+ans = -11 -  2i
+>> u*v
+ans =
+
+  -3 + 4i   7 - 1i
+   7 - 1i  -8 - 6i
+
+>> u 0= [1+2i
+error: variable "u" used as function in command style expression
+>> no hay newline en el prompt
+error: 'no' undefined near line 1, column 1
+>> u = [1+2i \n 1-3i]
+error: 'n' undefined near line 1, column 12
+>> u = [1+2i \\n 1-3i]
+error: parse error:
+
+  syntax error
+
+>>> u = [1+2i \\n 1-3i]
+               ^
+>> u = [1+2i ; 1-3i]
+u =
+
+   1 + 2i
+   1 - 3i
+
+>> a = 5 
+a = 5
+>> b = 5+10i
+b =   5 + 10i
+>> c = [1 2 3]
+c =
+
+   1   2   3
+
+>> d = [1,2,3]
+d =
+
+   1   2   3
+
+>> e =  [1;2;3]
+e =
+
+   1
+   2
+   3
+
+>> f = [1,2,3 ; 4,5,6; 7,8,9]
+f =
+
+   1   2   3
+   4   5   6
+   7   8   9
+
+>> ff^2
+error: 'ff' undefined near line 1, column 1
+>> f*f
+ans =
+
+    30    36    42
+    66    81    96
+   102   126   150
+
+>> f*f*f*f
+ans =
+
+    7560    9288   11016
+   17118   21033   24948
+   26676   32778   38880
+
+>> f*f*f*f*f %comentario si
+ans =
+
+   121824   149688   177552
+   275886   338985   402084
+   429948   528282   626616
+
+>> help who
+'who' is a built-in function from the file libinterp/corefcn/call-stack.cc
+
+ -- who
+ -- who pattern ...
+ -- who option pattern ...
+ -- C = who (...)
+     List currently defined variables matching the given patterns.
+
+     Valid pattern syntax is the same as described for the ‘clear’
+     command.  If no patterns are supplied, all variables are listed.
+
+     By default, only variables visible in the local scope are
+     displayed.
+
+     The following are valid options, but may not be combined.
+
+     ‘global’
+          List variables in the global scope rather than the current
+          scope.
+
+     ‘-regexp’
+          The patterns are considered to be regular expressions when
+          matching the variables to display.  The same pattern syntax
+          accepted by the ‘regexp’ function is used.
+
+     ‘-file’
+          The next argument is treated as a filename.  All variables
+          found within the specified file are listed.  No patterns are
+          accepted when reading variables from a file.
+
+     If called as a function, return a cell array of defined variable
+     names matching the given patterns.
+
+     See also: whos, isglobal, isvarname, exist, regexp.
+
+Additional help for built-in functions and operators is
+available in the online version of the manual.  Use the command
+'doc <topic>' to search the manual index.
+
+Help and information about Octave is also available on the WWW
+at https://www.octave.org and via the help@octave.org
+mailing list.
+>> help what 
+'what' is a function from the file /usr/share/octave/9.4.0/m/miscellaneous/what.m
+
+ -- what
+ -- what DIR
+ -- w = what (DIR)
+     List the Octave specific files in directory DIR.
+
+     If DIR is not specified then the current directory is used.
+
+     If a return argument is requested, the files found are returned in
+     the structure W.  The structure contains the following fields:
+
+     path
+          Full path to directory DIR
+
+     m
+          Cell array of m-files
+
+     mat
+          Cell array of mat files
+
+     mex
+          Cell array of mex files
+
+     oct
+          Cell array of oct files
+
+     mdl
+          Cell array of mdl files
+
+     slx
+          Cell array of slx files
+
+     p
+          Cell array of p-files
+
+     classes
+          Cell array of class directories (‘@CLASSNAME/’)
+
+     packages
+          Cell array of package directories (‘+PKGNAME/’)
+
+     Compatibility Note: Octave does not support mdl, slx, and p files.
+     ‘what’ will always return an empty list for these categories.
+
+     See also: which, ls, exist.
+
+Additional help for built-in functions and operators is
+available in the online version of the manual.  Use the command
+'doc <topic>' to search the manual index.
+
+Help and information about Octave is also available on the WWW
+at https://www.octave.org and via the help@octave.org
+mailing list.
+>> pwd
+ans = /home/alanreaven
+>> who
+Variables visible from the current scope:
+
+a    ans  b    c    d    e    f    u    v
+
+>> who a
+Variables visible from the current scope:
+
+a
+
+>> who ans
+Variables visible from the current scope:
+
+ans
+
+>> who
+Variables visible from the current scope:
+
+a    ans  b    c    d    e    f    u    v
+>> what
+>> 3+4i
+ans =  3 + 4i
+>> x = 3+4i
+x =  3 + 4i
+>> real(x)
+ans = 3
+>> imag(x)
+ans = 4
+>> conj(x)
+ans =  3 - 4i
+>> abs(x)
+ans = 5
+>> sqrt 3^2+4^2
+error: sqrt: argument must be numeric
+>> sqrt (3^2+4^2)
+ans = 5
+>> angle(x)
+ans = 0.9273
+>> p = [1,2,3]
+p =
+
+   1   2   3
+
+>> roots(p)
+ans =
+
+  -1.0000 + 1.4142i
+  -1.0000 - 1.4142i
+
+>> who
+Variables visible from the current scope:
+
+a    ans  b    c    d    e    f    p    u    v    x
+>> a
+a = 5
+>> b
+b =   5 + 10i
+>> d
+d =
+
+   1   2   3
+
+>> e
+e =
+
+   1
+   2
+   3
+
+>> f
+f =
+
+   1   2   3
+   4   5   6
+   7   8   9
+
+>> g
+error: 'g' undefined near line 1, column 1
+>> d
+d =
+
+   1   2   3
+
+>> r = [-1.0, 2.7, -3.1, -3.1]
+r =
+
+  -1.0000   2.7000  -3.1000  -3.1000
+
+>> poly(r)
+ans =
+
+    1.0000    4.5000   -3.6300  -33.0770  -25.9470
+
+>> 
+>> r = [1, -1+2i, -1-2i]
+r =
+
+   1 + 0i  -1 + 2i  -1 - 2i
+
+>> poly(r)
+ans =
+
+   1   1   3  -5
+
+>> p = [1,2,3,4,5]
+p =
+
+   1   2   3   4   5
+
+>> r = roots(p)
+r =
+
+  -1.2878 + 0.8579i
+  -1.2878 - 0.8579i
+   0.2878 + 1.4161i
+   0.2878 - 1.4161i
+
+>> %no hay mas de un polinomio que se corresponda con cada raiz?
+>> 
+>> poly(r)
+ans =
+
+   1   2   3   4   5
+
+>> %poly(roots(p)) claramente devuelve el polinomio p
+>> poly(roots(p)) == p
+ans =
+
+  1  1  0  0  0
+
+>> help ==
+
+ -- ==
+     Equality test operator.
+
+     See also: eq.
+
+Additional help for built-in functions and operators is
+available in the online version of the manual.  Use the command
+'doc <topic>' to search the manual index.
+
+Help and information about Octave is also available on the WWW
+at https://www.octave.org and via the help@octave.org
+mailing list.
+>> p
+p =
+
+   1   2   3   4   5
+
+>> u = poly(roots(p))
+u =
+
+   1   2   3   4   5
+
+>> u == p
+ans =
+
+  1  1  0  0  0
+
+>> help roots
+'roots' is a function from the file /usr/share/octave/9.4.0/m/polynomial/roots.m
+
+ -- R = roots (C)
+
+     Compute the roots of the polynomial C.
+
+     For a vector C with N components, return the roots of the
+     polynomial
+
+          c(1) * x^(N-1) + ... + c(N-1) * x + c(N)
+
+     As an example, the following code finds the roots of the quadratic
+     polynomial
+
+          p(x) = x^2 - 5.
+
+          c = [1, 0, -5];
+          roots (c)
+          ⇒  2.2361
+          ⇒ -2.2361
+
+     Note that the true result is +/- sqrt(5) which is roughly +/-
+     2.2361.
+
+     See also: poly, compan, fzero.
+
+Additional help for built-in functions and operators is
+available in the online version of the manual.  Use the command
+'doc <topic>' to search the manual index.
+
+Help and information about Octave is also available on the WWW
+at https://www.octave.org and via the help@octave.org
+mailing list.
+>> help poly
+'poly' is a function from the file /usr/share/octave/9.4.0/m/polynomial/poly.m
+
+ -- Y = poly (A)
+ -- Y = poly (X)
+     If A is a square N-by-N matrix, ‘poly (A)’ is the row vector of the
+     coefficients of ‘det (z * eye (N) - A)’, the characteristic
+     polynomial of A.
+
+     For example, the following code finds the eigenvalues of A which
+     are the roots of ‘poly (A)’.
+
+          roots (poly (eye (3)))
+              ⇒ 1.00001 + 0.00001i
+                 1.00001 - 0.00001i
+                 0.99999 + 0.00000i
+
+     In fact, all three eigenvalues are exactly 1 which emphasizes that
+     for numerical performance the ‘eig’ function should be used to
+     compute eigenvalues.
+
+     If X is a vector, ‘poly (X)’ is a vector of the coefficients of the
+     polynomial whose roots are the elements of X.  That is, if C is a
+     polynomial, then the elements of ‘D = roots (poly (C))’ are
+     contained in C.  The vectors C and D are not identical, however,
+     due to sorting and numerical errors.
+
+     See also: roots, eig.
+
+Additional help for built-in functions and operators is
+available in the online version of the manual.  Use the command
+'doc <topic>' to search the manual index.
+
+Help and information about Octave is also available on the WWW
+at https://www.octave.org and via the help@octave.org
+mailing list.
+>> t = 1:0.1:2
+t =
+
+ Columns 1 through 9:
+
+    1.0000    1.1000    1.2000    1.3000    1.4000    1.5000    1.6000    1.7000    1.8000
+
+ Columns 10 and 11:
+
+    1.9000    2.0000
+
+>> t
+t =
+
+ Columns 1 through 9:
+
+    1.0000    1.1000    1.2000    1.3000    1.4000    1.5000    1.6000    1.7000    1.8000
+
+ Columns 10 and 11:
+
+    1.9000    2.0000
+
+>> t
+t =
+
+    1.0000    1.1000    1.2000    1.3000    1.4000    1.5000    1.6000    1.7000    1.8000    1.9000    2.0000
+
+>> t = (1:0.1:2)'
+t =
+
+   1.0000
+   1.1000
+   1.2000
+   1.3000
+   1.4000
+   1.5000
+   1.6000
+   1.7000
+   1.8000
+   1.9000
+   2.0000
+
+>> t2 = 2
+t2 = 2
+>> t2 = (-2:0.1:2)
+t2 =
+
+ Columns 1 through 10:
+
+   -2.0000   -1.9000   -1.8000   -1.7000   -1.6000   -1.5000   -1.4000   -1.3000   -1.2000   -1.1000
+
+ Columns 11 through 20:
+
+   -1.0000   -0.9000   -0.8000   -0.7000   -0.6000   -0.5000   -0.4000   -0.3000   -0.2000   -0.1000
+
+ Columns 21 through 30:
+
+         0    0.1000    0.2000    0.3000    0.4000    0.5000    0.6000    0.7000    0.8000    0.9000
+
+ Columns 31 through 40:
+
+    1.0000    1.1000    1.2000    1.3000    1.4000    1.5000    1.6000    1.7000    1.8000    1.9000
+
+ Column 41:
+
+    2.0000
+
+>> len(t)
+error: 'len' undefined near line 1, column 1
+>> length(t)
+ans = 11
+>> length(t2)
+ans = 41
+>> 4/0.01
+ans = 400
+>> t2 = (-2:0.01:2)
+t2 =
+
+ Columns 1 through 10:
+
+   -2.0000   -1.9900   -1.9800   -1.9700   -1.9600   -1.9500   -1.9400   -1.9300   -1.9200   -1.9100
+
+ Columns 11 through 20:
+
+   -1.9000   -1.8900   -1.8800   -1.8700   -1.8600   -1.8500   -1.8400   -1.8300   -1.8200   -1.8100
+
+ Columns 21 through 30:
+
+   -1.8000   -1.7900   -1.7800   -1.7700   -1.7600   -1.7500   -1.7400   -1.7300   -1.7200   -1.7100
+
+ Columns 31 through 40:
+
+   -1.7000   -1.6900   -1.6800   -1.6700   -1.6600   -1.6500   -1.6400   -1.6300   -1.6200   -1.6100
+
+ Columns 41 through 50:
+
+   -1.6000   -1.5900   -1.5800   -1.5700   -1.5600   -1.5500   -1.5400   -1.5300   -1.5200   -1.5100
+
+ Columns 51 through 60:
+
+   -1.5000   -1.4900   -1.4800   -1.4700   -1.4600   -1.4500   -1.4400   -1.4300   -1.4200   -1.4100
+
+ Columns 61 through 70:
+
+   -1.4000   -1.3900   -1.3800   -1.3700   -1.3600   -1.3500   -1.3400   -1.3300   -1.3200   -1.3100
+
+ Columns 71 through 80:
+
+   -1.3000   -1.2900   -1.2800   -1.2700   -1.2600   -1.2500   -1.2400   -1.2300   -1.2200   -1.2100
+
+ Columns 81 through 90:
+
+   -1.2000   -1.1900   -1.1800   -1.1700   -1.1600   -1.1500   -1.1400   -1.1300   -1.1200   -1.1100
+
+ Columns 91 through 100:
+
+   -1.1000   -1.0900   -1.0800   -1.0700   -1.0600   -1.0500   -1.0400   -1.0300   -1.0200   -1.0100
+
+ Columns 101 through 110:
+
+   -1.0000   -0.9900   -0.9800   -0.9700   -0.9600   -0.9500   -0.9400   -0.9300   -0.9200   -0.9100
+
+ Columns 111 through 120:
+
+   -0.9000   -0.8900   -0.8800   -0.8700   -0.8600   -0.8500   -0.8400   -0.8300   -0.8200   -0.8100
+
+ Columns 121 through 130:
+
+   -0.8000   -0.7900   -0.7800   -0.7700   -0.7600   -0.7500   -0.7400   -0.7300   -0.7200   -0.7100
+
+ Columns 131 through 140:
+
+   -0.7000   -0.6900   -0.6800   -0.6700   -0.6600   -0.6500   -0.6400   -0.6300   -0.6200   -0.6100
+
+ Columns 141 through 150:
+
+   -0.6000   -0.5900   -0.5800   -0.5700   -0.5600   -0.5500   -0.5400   -0.5300   -0.5200   -0.5100
+
+ Columns 151 through 160:
+
+   -0.5000   -0.4900   -0.4800   -0.4700   -0.4600   -0.4500   -0.4400   -0.4300   -0.4200   -0.4100
+
+ Columns 161 through 170:
+
+   -0.4000   -0.3900   -0.3800   -0.3700   -0.3600   -0.3500   -0.3400   -0.3300   -0.3200   -0.3100
+
+ Columns 171 through 180:
+
+   -0.3000   -0.2900   -0.2800   -0.2700   -0.2600   -0.2500   -0.2400   -0.2300   -0.2200   -0.2100
+
+ Columns 181 through 190:
+
+   -0.2000   -0.1900   -0.1800   -0.1700   -0.1600   -0.1500   -0.1400   -0.1300   -0.1200   -0.1100
+
+ Columns 191 through 200:
+
+   -0.1000   -0.0900   -0.0800   -0.0700   -0.0600   -0.0500   -0.0400   -0.0300   -0.0200   -0.0100
+
+ Columns 201 through 210:
+
+         0    0.0100    0.0200    0.0300    0.0400    0.0500    0.0600    0.0700    0.0800    0.0900
+
+ Columns 211 through 220:
+
+    0.1000    0.1100    0.1200    0.1300    0.1400    0.1500    0.1600    0.1700    0.1800    0.1900
+
+ Columns 221 through 230:
+
+    0.2000    0.2100    0.2200    0.2300    0.2400    0.2500    0.2600    0.2700    0.2800    0.2900
+
+ Columns 231 through 240:
+
+    0.3000    0.3100    0.3200    0.3300    0.3400    0.3500    0.3600    0.3700    0.3800    0.3900
+
+ Columns 241 through 250:
+
+    0.4000    0.4100    0.4200    0.4300    0.4400    0.4500    0.4600    0.4700    0.4800    0.4900
+
+ Columns 251 through 260:
+
+    0.5000    0.5100    0.5200    0.5300    0.5400    0.5500    0.5600    0.5700    0.5800    0.5900
+
+ Columns 261 through 270:
+
+    0.6000    0.6100    0.6200    0.6300    0.6400    0.6500    0.6600    0.6700    0.6800    0.6900
+
+ Columns 271 through 280:
+
+    0.7000    0.7100    0.7200    0.7300    0.7400    0.7500    0.7600    0.7700    0.7800    0.7900
+
+ Columns 281 through 290:
+
+    0.8000    0.8100    0.8200    0.8300    0.8400    0.8500    0.8600    0.8700    0.8800    0.8900
+
+ Columns 291 through 300:
+
+    0.9000    0.9100    0.9200    0.9300    0.9400    0.9500    0.9600    0.9700    0.9800    0.9900
+
+ Columns 301 through 310:
+
+    1.0000    1.0100    1.0200    1.0300    1.0400    1.0500    1.0600    1.0700    1.0800    1.0900
+
+ Columns 311 through 320:
+
+    1.1000    1.1100    1.1200    1.1300    1.1400    1.1500    1.1600    1.1700    1.1800    1.1900
+
+ Columns 321 through 330:
+
+    1.2000    1.2100    1.2200    1.2300    1.2400    1.2500    1.2600    1.2700    1.2800    1.2900
+
+ Columns 331 through 340:
+
+    1.3000    1.3100    1.3200    1.3300    1.3400    1.3500    1.3600    1.3700    1.3800    1.3900
+
+ Columns 341 through 350:
+
+    1.4000    1.4100    1.4200    1.4300    1.4400    1.4500    1.4600    1.4700    1.4800    1.4900
+
+ Columns 351 through 360:
+
+    1.5000    1.5100    1.5200    1.5300    1.5400    1.5500    1.5600    1.5700    1.5800    1.5900
+
+ Columns 361 through 370:
+
+    1.6000    1.6100    1.6200    1.6300    1.6400    1.6500    1.6600    1.6700    1.6800    1.6900
+
+ Columns 371 through 380:
+
+    1.7000    1.7100    1.7200    1.7300    1.7400    1.7500    1.7600    1.7700    1.7800    1.7900
+
+ Columns 381 through 390:
+
+    1.8000    1.8100    1.8200    1.8300    1.8400    1.8500    1.8600    1.8700    1.8800    1.8900
+
+ Columns 391 through 400:
+
+    1.9000    1.9100    1.9200    1.9300    1.9400    1.9500    1.9600    1.9700    1.9800    1.9900
+
+ Column 401:
+
+    2.0000
+
+>> 4/0.01
+ans = 400
+>> length(t2)
+ans = 401
+>> t2(0)
+error: t2(0): subscripts must be either integers 1 to (2^63)-1 or logicals
+>> t2(1)
+ans = -2
+>> t2(400)
+ans = 1.9900
+>> t2(401)
+ans = 2
+>> zeros(3,3)
+ans =
+
+   0   0   0
+   0   0   0
+   0   0   0
+
+>> ones (3,3)
+ans =
+
+   1   1   1
+   1   1   1
+   1   1   1
+
+>> help zeros
+'zeros' is a built-in function from the file libinterp/corefcn/data.cc
+
+ -- VAL = zeros (N)
+ -- VAL = zeros (M, N)
+ -- VAL = zeros (M, N, K, ...)
+ -- VAL = zeros ([M N ...])
+ -- VAL = zeros (..., "like", VAR)
+ -- VAL = zeros (..., CLASS)
+     Return a matrix or N-dimensional array whose elements are all 0.
+
+     If invoked with a single scalar integer argument, return a square
+     NxN matrix.
+
+     If invoked with two or more scalar integer arguments, or a vector
+     of integer values, return an array with the given dimensions.
+
+     If a variable VAR is specified after "like", the output VAL will
+     have the same data type, complexity, and sparsity as VAR.
+
+     The optional argument CLASS specifies the class of the return array
+     and defaults to double.  For example:
+
+          val = zeros (m,n, "uint8")
+
+     See also: ones.
+
+Additional help for built-in functions and operators is
+available in the online version of the manual.  Use the command
+'doc <topic>' to search the manual index.
+
+Help and information about Octave is also available on the WWW
+at https://www.octave.org and via the help@octave.org
+mailing list.
+>> zeros(10)
+ans =
+
+   0   0   0   0   0   0   0   0   0   0
+   0   0   0   0   0   0   0   0   0   0
+   0   0   0   0   0   0   0   0   0   0
+   0   0   0   0   0   0   0   0   0   0
+   0   0   0   0   0   0   0   0   0   0
+   0   0   0   0   0   0   0   0   0   0
+   0   0   0   0   0   0   0   0   0   0
+   0   0   0   0   0   0   0   0   0   0
+   0   0   0   0   0   0   0   0   0   0
+   0   0   0   0   0   0   0   0   0   0
+
+>> zeros(1,109
+zeros(1,10)
+error: parse error:
+
+  syntax error
+
+>>> zeros(1,10)
+        ^
+>> zeros(1,10)
+ans =
+
+   0   0   0   0   0   0   0   0   0   0
+
+>> t = 1:0.1:2;
+>> size(t)
+ans =
+
+    1   11
+
+>> size(t')
+ans =
+
+   11    1
+
+>> t
+t =
+
+ Columns 1 through 10:
+
+    1.0000    1.1000    1.2000    1.3000    1.4000    1.5000    1.6000    1.7000    1.8000    1.9000
+
+ Column 11:
+
+    2.0000
+
+>> t+2
+ans =
+
+   3.0000   3.1000   3.2000   3.3000   3.4000   3.5000   3.6000   3.7000   3.8000   3.9000   4.0000
+
+>> t^2
+error: for x^y, only square matrix arguments are permitted and one argument must be scalar.  Use .^ for elementwise power.
+>> t.^2
+ans =
+
+   1.0000   1.2100   1.4400   1.6900   1.9600   2.2500   2.5600   2.8900   3.2400   3.6100   4.0000
+
+>> t-2
+ans =
+
+  -1.0000  -0.9000  -0.8000  -0.7000  -0.6000  -0.5000  -0.4000  -0.3000  -0.2000  -0.1000        0
+
+>> t*2
+ans =
+
+   2.0000   2.2000   2.4000   2.6000   2.8000   3.0000   3.2000   3.4000   3.6000   3.8000   4.0000
+
+>> t*t
+error: operator *: nonconformant arguments (op1 is 1x11, op2 is 1x11)
+>> t.*t
+ans =
+
+   1.0000   1.2100   1.4400   1.6900   1.9600   2.2500   2.5600   2.8900   3.2400   3.6100   4.0000
+
+>> cos(t)
+ans =
+
+   0.540302   0.453596   0.362358   0.267499   0.169967   0.070737  -0.029200  -0.128844  -0.227202  -0.323290  -0.416147
+
+>> sin(2t-1)
+error: parse error:
+
+  syntax error
+
+>>> sin(2t-1)
+         ^
+>> sin(2*t-1)
+ans =
+
+   0.8415   0.9320   0.9854   0.9996   0.9738   0.9093   0.8085   0.6755   0.5155   0.3350   0.1411
+
+>> t.*t
+ans =
+
+   1.0000   1.2100   1.4400   1.6900   1.9600   2.2500   2.5600   2.8900   3.2400   3.6100   4.0000
+
+>> t.^2
+ans =
+
+   1.0000   1.2100   1.4400   1.6900   1.9600   2.2500   2.5600   2.8900   3.2400   3.6100   4.0000
+
+>> t.^5
+ans =
+
+    1.0000    1.6105    2.4883    3.7129    5.3782    7.5938   10.4858   14.1986   18.8957   24.7610   32.0000
+
+>> t.^1000
+ans =
+
+ Columns 1 through 9:
+
+    1.0000e+00    2.4699e+41    1.5179e+79   8.7771e+113   1.3429e+146   1.2338e+176   1.3182e+204   2.8114e+230   1.8729e+255
+
+ Columns 10 and 11:
+
+   5.6702e+278   1.0715e+301
+
+>> help clear
+'clear' is a built-in function from the file libinterp/corefcn/variables.cc
+
+ -- clear
+ -- clear PATTERN ...
+ -- clear OPTIONS PATTERN ...
+     Delete the names matching the given PATTERNs thereby freeing
+     memory.
+
+     The PATTERN may contain the following special characters:
+
+     ‘?’
+          Match any single character.
+
+     ‘*’
+          Match zero or more characters.
+
+     ‘[ LIST ]’
+          Match the list of characters specified by LIST.  If the first
+          character is ‘!’ or ‘^’, match all characters except those
+          specified by LIST.  For example, the pattern ‘[a-zA-Z]’ will
+          match all lowercase and uppercase alphabetic characters.  On
+          Windows, square brackets are matched literally and are not
+          used to group characters.
+
+     For example, the command
+
+          clear foo b*r
+
+     clears the name ‘foo’ and all names that begin with the letter ‘b’
+     and end with the letter ‘r’.
+
+     If ‘clear’ is called without any arguments, all user-defined
+     variables are cleared from the current workspace (i.e., local
+     variables).  Any global variables present will no longer be visible
+     in the current workspace, but they will continue to exist in the
+     global workspace.  Functions are unaffected by this form of
+     ‘clear’.
+
+     The following options are available in both long and short form
+
+     ‘all, -all, -a’
+          Clear all local and global user-defined variables, and all
+          functions from the symbol table.
+
+     ‘-exclusive, -x’
+          Clear variables that do *not* match the following pattern.
+
+     ‘functions, -functions, -f’
+          Clear function names from the function symbol table.
+          Persistent variables will be re-initialized to their default
+          value unless the function has been locked in memory with
+          ‘mlock’.
+
+     ‘global, -global, -g’
+          Clear global variable names.
+
+     ‘variables, -variables, -v’
+          Clear local variable names.
+
+     ‘classes, -classes, -c’
+          Clear the class structure table and all objects.
+
+     ‘-regexp, -r’
+          The PATTERN arguments are treated as regular expressions and
+          any matches will be cleared.
+
+     With the exception of ‘-exclusive’ and ‘-regexp’, all long options
+     can be used without the dash as well.  Note that, aside from
+     ‘-exclusive’, only one other option may appear.  All options must
+     appear before any patterns.
+
+     Programming Notes: The command ‘clear NAME’ only clears the
+     variable NAME when both a variable and a (shadowed) function named
+     NAME are currently defined.  For example, suppose you have defined
+     a function ‘foo’, and then hidden it by performing the assignment
+     ‘foo = 2’.  Executing the command ‘clear foo’ once will clear the
+     variable definition and restore the definition of ‘foo’ as a
+     function.  Executing ‘clear foo’ a second time will clear the
+     function definition.
+
+     When a local variable name, which is linked to a global variable,
+     is cleared only the local copy of the variable is removed.  The
+     global copy is untouched and can be restored with ‘global
+     GLOBAL_VARNAME’.  Conversely, ‘clear -g GLOBAL_VARNAME’ will remove
+     both the local and global variables.
+
+     See also: clearvars, who, whos, exist, mlock.
+
+Additional help for built-in functions and operators is
+available in the online version of the manual.  Use the command
+'doc <topic>' to search the manual index.
+
+Help and information about Octave is also available on the WWW
+at https://www.octave.org and via the help@octave.org
+mailing list.
+>> t'
+ans =
+
+   1.0000
+   1.1000
+   1.2000
+   1.3000
+   1.4000
+   1.5000
+   1.6000
+   1.7000
+   1.8000
+   1.9000
+   2.0000
+
+>> t'*t
+ans =
+
+   1.0000   1.1000   1.2000   1.3000   1.4000   1.5000   1.6000   1.7000   1.8000   1.9000   2.0000
+   1.1000   1.2100   1.3200   1.4300   1.5400   1.6500   1.7600   1.8700   1.9800   2.0900   2.2000
+   1.2000   1.3200   1.4400   1.5600   1.6800   1.8000   1.9200   2.0400   2.1600   2.2800   2.4000
+   1.3000   1.4300   1.5600   1.6900   1.8200   1.9500   2.0800   2.2100   2.3400   2.4700   2.6000
+   1.4000   1.5400   1.6800   1.8200   1.9600   2.1000   2.2400   2.3800   2.5200   2.6600   2.8000
+   1.5000   1.6500   1.8000   1.9500   2.1000   2.2500   2.4000   2.5500   2.7000   2.8500   3.0000
+   1.6000   1.7600   1.9200   2.0800   2.2400   2.4000   2.5600   2.7200   2.8800   3.0400   3.2000
+   1.7000   1.8700   2.0400   2.2100   2.3800   2.5500   2.7200   2.8900   3.0600   3.2300   3.4000
+   1.8000   1.9800   2.1600   2.3400   2.5200   2.7000   2.8800   3.0600   3.2400   3.4200   3.6000
+   1.9000   2.0900   2.2800   2.4700   2.6600   2.8500   3.0400   3.2300   3.4200   3.6100   3.8000
+   2.0000   2.2000   2.4000   2.6000   2.8000   3.0000   3.2000   3.4000   3.6000   3.8000   4.0000
+
+>> t*t'
+ans = 25.850
+>> size(t'*t)
+ans =
+
+   11   11
+
+>> size(t*t')
+ans =
+
+   1   1
+
+>> x = [-1 2]
+x =
+
+  -1   2
+
+>> y = [3 4]
+y =
+
+   3   4
+
+>> z = x+y
+z =
+
+   2   6
+
+>> z = x*y'
+z = 5
+>> z = xx'*y
+error: 'xx' undefined near line 1, column 5
+>> z = x'*y
+z =
+
+  -3  -4
+   6   8
+
+>> z = x.*y
+z =
+
+  -3   8
+
+>> x ./y
+error: variable "x" used as function in command style expression
+Check whitespace around potential binary operator.
+>> x./y
+ans =
+
+  -0.3333   0.5000
+
+>> x.^y
+ans =
+
+   -1   16
+
+>> x.^2
+ans =
+
+   1   4
+
+>> v = 1:1:7
+v =
+
+   1   2   3   4   5   6   7
+
+>> v(1)
+ans = 1
+>> v(2278)
+error: v(2278): out of bound 7 (dimensions are 1x7)
+>> v(2:7)
+ans =
+
+   2   3   4   5   6   7
+
+>> v(1:6)
+ans =
+
+   1   2   3   4   5   6
+
+>> v(2:7)-v(1:6)
+ans =
+
+   1   1   1   1   1   1
+
+>> v(2:)
+error: parse error:
+
+  syntax error
+
+>>> v(2:)
+        ^
+>> v(2:end)
+ans =
+
+   2   3   4   5   6   7
+
+>> v(start:end)
+error: 'start' undefined near line 1, column 3
+>> v(1:end)
+ans =
+
+   1   2   3   4   5   6   7
+
+>> v(1:end-1)
+ans =
+
+   1   2   3   4   5   6
+
+>> v(1:end-10)
+ans = [](1x0)
+>> v(2:7)-v(1:5)
+error: operator -: nonconformant arguments (op1 is 1x6, op2 is 1x5)
+>> a = [1,2;2,1]
+a =
+
+   1   2
+   2   1
+
+>> A = a
+A =
+
+   1   2
+   2   1
+
+>> b = [1;2]
+b =
+
+   1
+   2
+
+>> x = inv(A)*b
+x =
+
+   1
+   0
+
+>> e = AA*x-b
+error: 'AA' undefined near line 1, column 5
+>> e = A*x-b
+e =
+
+   0
+   0
+
+>> e'*e
+ans = 0
+>> eps
+ans = 2.2204e-16
+>> A1 = [1,1;-1,1]
+A1 =
+
+   1   1
+  -1   1
+
+>> b1 = [0;1*
+error: parse error:
+
+  syntax error
+
+>>> b1 = [0;1*
+    ^
+>> b1 = [0;1]
+b1 =
+
+   0
+   1
+
+>> A2 = [100.0, 100.0; 100.0, 100.0+5*eps]
+A2 =
+
+   100   100
+   100   100
+
+>> b = [0,1]
+b =
+
+   0   1
+
+>> def 
+error: 'def' undefined near line 1, column 1
+>> help function
+
+ -- function OUTPUTS = function_name (INPUT, ...)
+ -- function function_name (INPUT, ...)
+ -- function OUTPUTS = function_name
+     Begin a function body with name ‘function_name’, with OUTPUTS as
+     results, and with INPUTS as parameters.
+
+     The function can later be invoked in Octave using the syntax
+
+          [OUTPUT1, OUTPUT2, ...] = function_name (INPUT1, INPUT2, ...)
+
+     See also: return.
+
+Additional help for built-in functions and operators is
+available in the online version of the manual.  Use the command
+'doc <topic>' to search the manual index.
+
+Help and information about Octave is also available on the WWW
+at https://www.octave.org and via the help@octave.org
+mailing list.
+>> function e = error(A,b)
+x = inv(A)*b
+e = A*x-b
+return e'*e
+error: parse error:
+
+  syntax error
+
+>>> return e'*e
+           ^
+>> function e = error(A,b)
+x = inv(A)*b
+e = A*x-b
+e = e'*e
+return e
+error: parse error:
+
+  syntax error
+
+>>> return e
+           ^
+>> help return
+
+ -- return
+     Return execution control immediately from a function or script to
+     the calling code.
+
+     ‘return’ is used to stop executing code and exit an m-file
+     immediately rather than continuing until the end of the function or
+     script is reached.
+
+     If the function or script was invoked directly, rather than from
+     calling code in an m-file, then Octave returns to the command line.
+
+     See also: function.
+
+Additional help for built-in functions and operators is
+available in the online version of the manual.  Use the command
+'doc <topic>' to search the manual index.
+
+Help and information about Octave is also available on the WWW
+at https://www.octave.org and via the help@octave.org
+mailing list.
+>> function e = error(A,b)
+x = inv(A)*b
+e = A*x-b
+e = e'*e
+return
+
+
+;
+;
+;;
+
+>> x1 = inv(A1)*b
+error: operator *: nonconformant arguments (op1 is 2x2, op2 is 1x2)
+>> x1 = inv(A1)*b1
+x1 =
+
+  -0.5000
+   0.5000
+
+>> e1 = A1*x1 - b
+e1 =
+
+   0  -1
+   1   0
+
+>> e1 = A1*x1 - b1
+e1 =
+
+   0
+   0
+
+>> e1 = e1'*e1
+e1 = 0
+>> x2 = inv(A2)*b2
+warning: matrix singular to machine precision
+error: 'b2' undefined near line 1, column 14
+>> b2 = [0;1]
+b2 =
+
+   0
+   1
+
+>> x2 = inv(A2)*b2
+warning: matrix singular to machine precision
+x2 =
+
+   NaN
+   NaN
+
+>> A1
+A1 =
+
+   1   1
+  -1   1
+
+>> b2
+b2 =
+
+   0
+   1
+
+>> A2
+A2 =
+
+   100   100
+   100   100
+
+>> B2
+error: 'B2' undefined near line 1, column 1
+>> b2
+b2 =
+
+   0
+   1
+
+>> A2-100
+ans =
+
+   0   0
+   0   0
+
+>> A2-100.0
+ans =
+
+   0   0
+   0   0
+
+>> A2 = [100.0, 100.0; 100.0, 100.0+5*eps]
+A2 =
+
+   100   100
+   100   100
+
+>> inv(A2)
+warning: matrix singular to machine precision
+ans =
+
+   Inf   Inf
+   Inf   Inf
+
+>> inv(A2) * b
+warning: matrix singular to machine precision
+error: operator *: nonconformant arguments (op1 is 2x2, op2 is 1x2)
+>> inv(A2) * b2
+warning: matrix singular to machine precision
+ans =
+
+   NaN
+   NaN
+
+>> x = invv(A2)*b
+error: 'invv' undefined near line 1, column 5
+>> x2 = inv(A2)*b
+warning: matrix singular to machine precision
+error: operator *: nonconformant arguments (op1 is 2x2, op2 is 1x2)
+>> x2 = inv(A2)*b2
+warning: matrix singular to machine precision
+x2 =
+
+   NaN
+   NaN
+
+>> A2*x2 - b2
+ans =
+
+   NaN
+   NaN
+
+>> help matrix
+error: help: 'matrix' not found
+>> t = 0:0.1:2*pi
+t =
+
+ Columns 1 through 18:
+
+         0    0.1000    0.2000    0.3000    0.4000    0.5000    0.6000    0.7000    0.8000    0.9000    1.0000    1.1000    1.2000    1.3000    1.4000    1.5000    1.6000    1.7000
+
+ Columns 19 through 36:
+
+    1.8000    1.9000    2.0000    2.1000    2.2000    2.3000    2.4000    2.5000    2.6000    2.7000    2.8000    2.9000    3.0000    3.1000    3.2000    3.3000    3.4000    3.5000
+
+ Columns 37 through 54:
+
+    3.6000    3.7000    3.8000    3.9000    4.0000    4.1000    4.2000    4.3000    4.4000    4.5000    4.6000    4.7000    4.8000    4.9000    5.0000    5.1000    5.2000    5.3000
+
+ Columns 55 through 63:
+
+    5.4000    5.5000    5.6000    5.7000    5.8000    5.9000    6.0000    6.1000    6.2000
+
+>> t = 0:0.1:2*pi;
+>> y = cos(2*t-1);
+>> figure(1)
+>> plot(t,y)
+>> warning: invalid zoom region
+
+>> figure(2); stem(t,y);
+>> help(figure)
+error: help: invalid input
+>> help figure
+'figure' is a function from the file /usr/share/octave/9.4.0/m/plot/util/figure.m
+
+ -- figure
+ -- figure N
+ -- figure (N)
+ -- figure (..., "PROPERTY", VALUE, ...)
+ -- H = figure (...)
+     Create a new figure window for plotting.
+
+     If no arguments are specified, a new figure with the next available
+     number is created.
+
+     If called with an integer N, and no such numbered figure exists,
+     then a new figure with the specified number is created.  If the
+     figure already exists then it is made visible and becomes the
+     current figure for plotting.
+
+     Multiple property-value pairs may be specified for the figure
+     object, but they must appear in pairs.
+
+     The optional return value H is a graphics handle to the created
+     figure object.
+
+     Programming Note: The full list of properties is documented at
+     Figure Properties.
+
+     See also: axes, gcf, shg, clf, close.
+
+Additional help for built-in functions and operators is
+available in the online version of the manual.  Use the command
+'doc <topic>' to search the manual index.
+
+Help and information about Octave is also available on the WWW
+at https://www.octave.org and via the help@octave.org
+mailing list.
+>> close(1)
+error: close: first argument must be "all", a figure handle, or a figure name
+error: called from
+    close at line 90 column 7
+>> close(all)
+error: Invalid call to all.  Correct usage is:
+
+ -- TF = all (X)
+ -- TF = all (X, DIM)
+
+Additional help for built-in functions and operators is
+available in the online version of the manual.  Use the command
+'doc <topic>' to search the manual index.
+
+Help and information about Octave is also available on the WWW
+at https://www.octave.org and via the help@octave.org
+mailing list.
+>> size(t*t')
+ans =
+
+   1   1
+
+>> t
+t =
+
+ Columns 1 through 18:
+
+         0    0.1000    0.2000    0.3000    0.4000    0.5000    0.6000    0.7000    0.8000    0.9000    1.0000    1.1000    1.2000    1.3000    1.4000    1.5000    1.6000    1.7000
+
+ Columns 19 through 36:
+
+    1.8000    1.9000    2.0000    2.1000    2.2000    2.3000    2.4000    2.5000    2.6000    2.7000    2.8000    2.9000    3.0000    3.1000    3.2000    3.3000    3.4000    3.5000
+
+ Columns 37 through 54:
+
+    3.6000    3.7000    3.8000    3.9000    4.0000    4.1000    4.2000    4.3000    4.4000    4.5000    4.6000    4.7000    4.8000    4.9000    5.0000    5.1000    5.2000    5.3000
+
+ Columns 55 through 63:
+
+    5.4000    5.5000    5.6000    5.7000    5.8000    5.9000    6.0000    6.1000    6.2000
+
+>> plot y
+error: plot: no data to plot
+error: called from
+    __plt__ at line 130 column 9
+    plot at line 240 column 10
+>> y
+y =
+
+ Columns 1 through 14:
+
+   5.4030e-01   6.9671e-01   8.2534e-01   9.2106e-01   9.8007e-01   1.0000e+00   9.8007e-01   9.2106e-01   8.2534e-01   6.9671e-01   5.4030e-01   3.6236e-01   1.6997e-01  -2.9200e-02
+
+ Columns 15 through 28:
+
+  -2.2720e-01  -4.1615e-01  -5.8850e-01  -7.3739e-01  -8.5689e-01  -9.4222e-01  -9.8999e-01  -9.9829e-01  -9.6680e-01  -8.9676e-01  -7.9097e-01  -6.5364e-01  -4.9026e-01  -3.0733e-01
+
+ Columns 29 through 42:
+
+  -1.1215e-01   8.7499e-02   2.8366e-01   4.6852e-01   6.3469e-01   7.7557e-01   8.8552e-01   9.6017e-01   9.9654e-01   9.9318e-01   9.5023e-01   8.6940e-01   7.5390e-01   6.0835e-01
+
+ Columns 43 through 56:
+
+   4.3855e-01   2.5126e-01   5.3955e-02  -1.4550e-01  -3.3915e-01  -5.1929e-01  -6.7872e-01  -8.1109e-01  -9.1113e-01  -9.7484e-01  -9.9969e-01  -9.8469e-01  -9.3043e-01  -8.3907e-01
+
+ Columns 57 through 63:
+
+  -7.1427e-01  -5.6098e-01  -3.8534e-01  -1.9433e-01   4.4257e-03   2.0300e-01   3.9349e-01
+
+>> plot(t,y)
+>> plot(t,y)
+>> plot(t,y, "y^--")
+>> plot(t,y, "g^--")
+>> plot(t,y, "g^-")
+>> plot(t,y, "g^-.")
+>> plot(t,y, "ro-:")
+>> warning: invalid zoom region
+
+>> clf;
+>> clf; plot(t, cos(t), "m:o");
+>> grid;
+>> xlabel("t")
+>> ylabel("cos(t)")
+>> title("funci
+error: parse error:
+
+  syntax error
+
+>>> title("funci
+               ^
+>> title("función periódica")
+>> grid
+>> help grid
+'grid' is a function from the file /usr/share/octave/9.4.0/m/plot/appearance/grid.m
+
+ -- grid
+ -- grid on
+ -- grid off
+ -- grid minor
+ -- grid minor on
+ -- grid minor off
+ -- grid (HAX, ...)
+     Control the display of plot grid lines.
+
+     The function state input may be either "on" or "off".  If it is
+     omitted, the current grid state is toggled.
+
+     When the first argument is "minor" all subsequent commands modify
+     the minor grid rather than the major grid.
+
+     If the first argument HAX is an axes handle, then operate on this
+     axes rather than the current axes returned by ‘gca’.
+
+     To control the grid lines for an individual axes use the ‘set’
+     function.  For example:
+
+          set (gca, "ygrid", "on");
+
+     See also: axis, box.
+
+Additional help for built-in functions and operators is
+available in the online version of the manual.  Use the command
+'doc <topic>' to search the manual index.
+
+Help and information about Octave is also available on the WWW
+at https://www.octave.org and via the help@octave.org
+mailing list.
+>> grid on
+>> grid off
+>> grid minor on
+>> grid on
+>> rand(4)
+ans =
+
+   0.356466   0.749486   0.699282   0.826714
+   0.068628   0.420802   0.311799   0.280978
+   0.407226   0.044773   0.657502   0.114575
+   0.059945   0.977124   0.613588   0.519494
+
+>> clf
+>> subplot(3,2,1); plot(t,cos(t));
+>> subplot(3,2,2); stem(t,cos(t));
+>> subplot(3,2,3); plot(t,sin(t));
+>> subplot(3,2,4); stem(t,sin(t));
+>> subplot(3,2,5); plot(t,tan(t));
+>> subplot(3,2,6); stem(t,tan(t));
+>> help subplot
+'subplot' is a function from the file /usr/share/octave/9.4.0/m/plot/util/subplot.m
+
+ -- subplot (ROWS, COLS, INDEX)
+ -- subplot (ROWS, COLS, INDEX, HAX)
+ -- subplot (RCN)
+ -- subplot (HAX)
+ -- subplot (..., "align")
+ -- subplot (..., "replace")
+ -- subplot ("position", POS)
+ -- subplot (..., PROP, VAL, ...)
+ -- HAX = subplot (...)
+     Set up a plot grid with ROWS by COLS subwindows and set the current
+     axes for plotting (‘gca’) to the location given by INDEX.
+
+     If an axes handle HAX is provided after the (ROWS, COLS, INDEX)
+     arguments, the corresponding axes is turned into a subplot.
+
+     If only one numeric argument is supplied, then it must be a three
+     digit value specifying the number of rows in digit 1, the number of
+     columns in digit 2, and the plot index in digit 3.
+
+     The plot index runs row-wise; First, all columns in a row are
+     numbered and then the next row is filled.
+
+     For example, a plot with 2x3 grid will have plot indices running as
+     follows:
+
+          +-----+-----+-----+
+          |  1  |  2  |  3  |
+          +-----+-----+-----+
+          |  4  |  5  |  6  |
+          +-----+-----+-----+
+
+     INDEX may also be a vector.  In this case, the new axes will
+     enclose the grid locations specified.  The first demo illustrates
+     this:
+
+          demo ("subplot", 1)
+
+     The index of the subplot to make active may also be specified by
+     its axes handle, HAX, returned from a previous ‘subplot’ command.
+
+     If the option "align" is given then the plot boxes of the
+     subwindows will align, but this may leave no room for axes tick
+     marks or labels.
+
+     If the option "replace" is given then the subplot axes will be
+     reset, rather than just switching the current axes for plotting to
+     the requested subplot.
+
+     The "position" property can be used to exactly position the subplot
+     axes within the current figure.  The option POS is a 4-element
+     vector [x, y, width, height] that determines the location and size
+     of the axes.  The values in POS are normalized in the range [0,1].
+
+     Any property/value pairs are passed directly to the underlying axes
+     object.  The full list of properties is documented at Axes
+     Properties.
+
+     Any previously existing axes that would be (partly) covered by the
+     newly created axes are deleted.
+
+     If the output HAX is requested, subplot returns the axes handle for
+     the subplot.  This is useful for modifying the properties of a
+     subplot using ‘set’.
+
+     Under some circumstances, ‘subplot’ might not be able to identify
+     axes that it could re-use and might replace them.  If ‘subplot’
+     axes should be referenced repeatedly, consider creating and storing
+     their axes handles beforehand instead of calling ‘subplot’
+     repeatedly for the same position.
+
+     Example:
+
+          x = 1:10;
+          y = rand (16, 10);
+          for i_plot = 1:4
+            hax(i_plot) = subplot (2, 2, i_plot);
+            hold (hax(i_plot), "on");
+            grid (hax(i_plot), "on");
+          endfor
+          for i_loop = 1:2
+            for i_plot = 1:4
+              iy = (i_loop - 1)*4 + i_plot;
+              plotyy (hax(i_plot), x,y(iy,:), x,y(iy+1,:));
+            endfor
+           endfor
+
+     See also: axes, plot, gca, set.
+
+Additional help for built-in functions and operators is
+available in the online version of the manual.  Use the command
+'doc <topic>' to search the manual index.
+
+Help and information about Octave is also available on the WWW
+at https://www.octave.org and via the help@octave.org
+mailing list.
+>> print("todo.png", "-dpng")
+error: print: no figure to print
+error: called from
+    print at line 467 column 5
+>> help print
+'print' is a function from the file /usr/share/octave/9.4.0/m/plot/util/print.m
+
+ -- print ()
+ -- print (OPTIONS)
+ -- print (FILENAME, OPTIONS)
+ -- print (HFIG, ...)
+ -- RGB = print ("-RGBImage", ...)
+     Format a figure for printing and either save it to a file, send it
+     to a printer, or return an RGB image.
+
+     FILENAME defines the name of the output file.  If the filename has
+     no suffix then one is inferred from the specified device and
+     appended to the filename.  When neither a filename nor the
+     "-RGBImage" option is present, the output is sent to the printer.
+     The various options and filename arguments may be given in any
+     order, except for the figure handle argument HFIG which must be
+     first if it is present.
+
+     Example: Print to a file using PDF and JPEG formats.
+
+          figure (1);
+          clf ();
+          surf (peaks);
+          print figure1.pdf    # The extension specifies the format
+          print -djpg figure1  # Will produce "figure1.jpg" file
+
+     If the first argument is a handle HFIG to a figure object then it
+     specifies the figure to print.  By default, the current figure
+     returned by ‘gcf’ is printed.
+
+     For outputs to paged formats, for example, PostScript and PDF, the
+     page size is specified by the figure's ‘papersize’ property
+     together with the ‘paperunits’ property.  The location and size of
+     the plot on the page are specified by the figure's ‘paperposition’
+     property.  The orientation of the page is specified by the figure's
+     ‘paperorientation’ property.
+
+     For non-page formats--for example, image formats like JPEG--the
+     width and height of the output are specified by the figure's
+     ‘paperposition(3:4)’ property values.
+
+     The ‘print’ command supports many OPTIONS:
+
+     ‘-fH’
+          Specify the handle, H, of the figure to be printed.
+
+          Example: Print figure 1.
+
+               figure (1);
+               clf ();
+               surf (peaks);
+               figure (2);
+               print -f1 figure1.pdf
+               ## Equivalent functional form:
+               print (1, "figure1.pdf")
+
+     ‘-PPRINTER’
+          Set the PRINTER name to which the plot is sent if no FILENAME
+          is specified.
+
+          Example: Print to printer named PS_printer using PostScript
+          format.
+
+               clf ();
+               surf (peaks);
+               print -dpswrite -PPS_printer
+
+     ‘-RGBImage’
+          Return an M-by-N-by-3 RGB image of the figure.  The size of
+          the image depends on the formatting options.  This is similar
+          to taking a screen capture of the plot, but formatting options
+          may be changed such as the resolution or monochrome/color.
+
+          Example: Get the pixels of a figure image.
+
+               clf ();
+               surf (peaks);
+               RGB = print ("-RGBImage");
+
+     ‘-image | -opengl’
+     ‘-vector | -painters’
+          Specifies whether the pixel-based renderer (‘-image’ or
+          ‘-opengl’) or vector-based renderer (‘-vector’ or ‘-painters’)
+          is used.  This is equivalent to changing the figure's
+          "Renderer" property.  When the figure "RendererMode" property
+          is "auto" (the default) Octave will use the "opengl" renderer
+          for raster formats (e.g., JPEG) and "painters" for vector
+          formats (e.g., PDF).  These options are only supported for the
+          "qt" graphics toolkit.
+
+     ‘-svgconvert (default)’
+     ‘-nosvgconvert’
+          When using the ‘-painters’ renderer, this enables or disables
+          the SVG based backend toolchain with enhanced characteristics:
+
+          Font handling:
+               For interpreters "none" and "tex", the actual font is
+               embedded in the output file which allows for printing
+               arbitrary characters and fonts in all vector formats.
+
+               Strings using the "latex" interpreter, are rendered using
+               path objects.  This looks good but note that textual info
+               (font, characters...) are lost.
+
+          Output Simplification:
+               By default, the option ‘-painters’ renders patch and
+               surface objects using assemblies of triangles.  This may
+               lead to anti-aliasing artifacts when viewing the file.
+               The ‘-svgconvert’ option reconstructs polygons in order
+               to avoid those artifacts (particularly for 2-D figures).
+
+          Transparency:
+               Allows for printing transparent graphics objects in PDF
+               format.  For PostScript formats the presence of any
+               transparent object will cause the output to be
+               rasterized.
+
+          Caution: If Octave was built against Qt version earlier than
+          5.13, ‘-svgconvert’ may lead to inaccurate rendering of image
+          objects.
+
+     ‘-polymerge’
+     ‘-nopolymerge’
+     ‘-polymerge-all’
+          When using the SVG based backend ‘-svgconvert’, faces are
+          rendered as triangles.  In some cases, some viewers might
+          display fine lines where those triangles share an edge.  These
+          options control whether all triangles that share edges are
+          merged into polygons (‘-polymerge-all’ which might take some
+          time for graphics consisting of many triangles - including
+          line markers), only consecutive polygons are merged
+          (‘-polymerge’), or no triangles are merged at all
+          (‘-no-polymerge’).  By default, only consecutive triangles
+          sharing an edge are merged, unless the printed figure contains
+          patch or surface graphics objects in which case all triangles
+          that are sharing an edge are merged.
+
+     ‘-portrait’
+     ‘-landscape’
+          Specify the orientation of the plot for printed output.  For
+          non-printed output the aspect ratio of the output corresponds
+          to the plot area defined by the "paperposition" property in
+          the orientation specified.  This option is equivalent to
+          changing the figure's "paperorientation" property.
+
+     ‘-fillpage’
+     ‘-bestfit’
+          When using a page-based format (PDF, PostScript, printer)
+          ignore the "paperposition" property and have the plot occupy
+          the entire page.  The option ‘-fillpage’ will stretch the plot
+          to occupy the page with 0.25 inch margins all around.  The
+          option ‘-bestfit’ will expand the plot to take up as much room
+          as possible on the page *without* distorting the original
+          aspect ratio of the plot.
+
+     ‘-color’
+     ‘-mono’
+          Color or monochrome output.
+
+     ‘-solid’
+     ‘-dashed’
+          Force all lines to be solid or dashed, respectively.
+
+     ‘-noui’
+          Don't print uicontrol objects such as pushbuttons which may
+          overlay the plot.  This is the default behavior and it is not
+          possible to include uicontrol objects in the output without
+          using an external screen capture tool.
+
+     ‘-rNUM’
+          Resolution of bitmaps in dots per inch (DPI). For both
+          metafiles and SVG the default is the screen resolution; for
+          other formats the default is 150 DPI.  To specify screen
+          resolution, use "-r0".
+
+          Example: high resolution raster output.
+
+               clf ();
+               surf (peaks (), "facelighting", "gouraud");
+               light ();
+               print ("-r600", "lit_peaks.png");
+
+     ‘-SXSIZE,YSIZE’
+          Plot size in pixels for raster formats including PNG, JPEG,
+          PNG, and _unusually_ SVG.  For all vector formats, including
+          PDF, PS, and EPS, the plot size is specified in points.  This
+          option is equivalent to changing the width and height of the
+          output by setting the figure property ‘paperposition(3:4)’.
+          When using the command form of the print function you must
+          quote the XSIZE,YSIZE option to prevent the Octave interpreter
+          from recognizing the embedded comma (',').  For example, by
+          writing "-S640,480".
+
+     ‘-tight’
+     ‘-loose’
+          Force a tight or loose bounding box for EPS files.  The
+          default is tight.
+
+     ‘-PREVIEW’
+          Add a preview to EPS files.  Supported formats are:
+
+          ‘-interchange’
+               Provide an interchange preview.
+
+          ‘-metafile’
+               Provide a metafile preview.
+
+          ‘-pict’
+               Provide a pict preview.
+
+          ‘-tiff’
+               Provide a TIFF preview.
+
+     ‘-append’
+          Append PostScript or PDF output to an existing file of the
+          same type.
+
+     ‘-FFONTNAME’
+     ‘-FFONTNAME:SIZE’
+     ‘-F:SIZE’
+          Use FONTNAME and/or FONTSIZE for all text.  FONTNAME is
+          ignored for some devices: fig, etc.
+
+     ‘-dDEVICE’
+          The available output format is specified by the option DEVICE,
+          and is one of the following (devices marked with a '*' are
+          only available with the Gnuplot toolkit):
+
+          Vector Formats
+
+          ‘svg’
+               Scalable Vector Graphics.
+
+          ‘pdf’
+          ‘pdfcrop’
+               Portable Document Format.  The ‘pdf’ device formats the
+               figure for printing on paper.  The size of the
+               surrounding page and the position of the figure inside
+               the page are defined by the paper* figure properties.
+
+               Use ‘pdfcrop’ if you don't want the surrounding page.
+
+               Caution: with ‘-nosvgconvert’ option, PDF inherits the
+               same limitations as PostScript (limited set of fonts and
+               lack of transparency).
+
+          ‘eps(2)’
+          ‘epsc(2)’
+               Encapsulated PostScript (level 1 and 2, mono and color).
+
+               The OpenGL-based graphics toolkits always generate
+               PostScript level 3.0.  They have limited support for text
+               unless using the ‘-svgconvert’ option (the default).
+               Limitations include using only ASCII characters (e.g., no
+               Greek letters) and support for just three base PostScript
+               fonts: Helvetica (the default), Times, or Courier.  Any
+               other font will be replaced by Helvetica.
+
+          ‘ps(2)’
+          ‘psc(2)’
+               Same as ‘eps’ except that the figure is formatted for
+               printing on paper.  The size of the surrounding page and
+               position of the figure inside the page are defined by the
+               paper* figure properties.
+
+          ‘pslatex’
+          ‘epslatex’
+          ‘pdflatex’
+          ‘pslatexstandalone’
+          ‘epslatexstandalone’
+          ‘pdflatexstandalone’
+               Generate a LaTeX file ‘FILENAME.tex’ for the text
+               portions of a plot and a file ‘FILENAME.(ps|eps|pdf)’ for
+               the remaining graphics.  The graphics file suffix
+               .ps|eps|pdf is determined by the specified device type.
+               The LaTeX file produced by the ‘standalone’ option can be
+               processed directly by LaTeX.  The file generated without
+               the ‘standalone’ option is intended to be included from
+               another LaTeX document.  In either case, the LaTeX file
+               contains an ‘\includegraphics’ command so that the
+               generated graphics file is automatically included when
+               the LaTeX file is processed.  The text that is written to
+               the LaTeX file contains the strings *exactly* as they
+               were specified in the plot.  If any special characters of
+               the TeX mode interpreter were used, the file must be
+               edited before LaTeX processing.  Specifically, the
+               special characters must be enclosed with dollar signs
+               (‘$ ... $’), and other characters that are recognized by
+               LaTeX may also need editing (e.g., braces).  The
+               ‘pdflatex’ device, and any of the ‘standalone’ formats,
+               are not available with the Gnuplot toolkit.
+
+          ‘epscairo*’
+          ‘pdfcairo*’
+          ‘epscairolatex*’
+          ‘pdfcairolatex*’
+          ‘epscairolatexstandalone*’
+          ‘pdfcairolatexstandalone*’
+               Generate output with Cairo renderer.  The devices
+               ‘epscairo’ and ‘pdfcairo’ are synonymous with the ‘epsc’
+               device.  The LaTeX variants generate a LaTeX file,
+               ‘FILENAME.tex’, for the text portions of a plot, and an
+               image file, ‘FILENAME.(eps|pdf)’, for the graph portion
+               of the plot.  The ‘standalone’ variants behave as
+               described for ‘epslatexstandalone’ above.
+
+          ‘canvas*’
+               Javascript-based drawing on an HTML5 canvas viewable in a
+               web browser.
+
+          ‘emf’
+          ‘meta’
+               Microsoft Enhanced Metafile
+
+          ‘fig’
+               XFig.  For the Gnuplot graphics toolkit, the additional
+               options ‘-textspecial’ or ‘-textnormal’ (default) can be
+               used to control whether the special flag should be set
+               for the text in the figure.
+
+          ‘latex*’
+          ‘eepic*’
+               LaTeX picture environment and extended picture
+               environment.
+
+          ‘tikz’
+          ‘tikzstandalone*’
+               Generate a LaTeX file using PGF/TikZ format.  The
+               OpenGL-based toolkits create a PGF file while Gnuplot
+               creates a TikZ file.  The ‘tikzstandalone’ device
+               produces a LaTeX document which includes the TikZ file.
+
+          Raster Formats
+
+          ‘png’
+               Portable Network Graphics
+
+          ‘jpg’
+          ‘jpeg’
+               JPEG image
+
+          ‘tif’
+          ‘tiff’
+          ‘tiffn’
+               TIFF image with LZW compression (tif, tiff) or
+               uncompressed (tiffn).
+
+          ‘gif’
+               GIF image
+
+          ‘pbm’
+               PBMplus
+
+          ‘dumb*’
+               ASCII art
+
+          If the device is omitted, it is inferred from the file
+          extension, or if there is no filename then it is sent to the
+          printer as PostScript.
+
+     ‘-dGHOSTSCRIPT_DEVICE’
+          Additional devices are supported by Ghostscript.  Some
+          examples are:
+
+          ‘ljet2p’
+               HP LaserJet IIP
+
+          ‘pcx24b’
+               24-bit color PCX file format
+
+          ‘ppm’
+               Portable Pixel Map file format
+
+          For a complete list of available formats and devices type
+          ‘system ("gs -h")’.
+
+          When Ghostscript output is sent to a printer the size is
+          determined by the figure's "papersize" property.  When the
+          output is sent to a file the size is determined by the plot
+          box defined by the figure's "paperposition" property.
+
+     ‘-GGHOSTSCRIPT_COMMAND’
+          Specify the command for calling Ghostscript.  For Unix the
+          default is "gs" and for Windows it is "gswin32c".
+
+     ‘-TextAlphaBits=N’
+     ‘-GraphicsAlphaBits=N’
+          Octave is able to produce output for various printers,
+          bitmaps, and vector formats by using Ghostscript.  For bitmap
+          and printer output anti-aliasing is applied using
+          Ghostscript's TextAlphaBits and GraphicsAlphaBits options.
+          The default number of bits are 4 and 1 respectively.  Allowed
+          values for N are 1, 2, or 4.
+
+     ‘-no-append-file-extension’
+          With this option, FILENAME is used verbatim.  That means no
+          file extension matching the file format is appended
+          automatically.
+
+     See also: saveas, getframe, savefig, hgsave, orient, figure.
+
+Additional help for built-in functions and operators is
+available in the online version of the manual.  Use the command
+'doc <topic>' to search the manual index.
+
+Help and information about Octave is also available on the WWW
+at https://www.octave.org and via the help@octave.org
+mailing list.
+>> print("todo.png", "-dpng")
+error: print: no figure to print
+error: called from
+    print at line 467 column 5
+>> gcf
+ans = 1
+>> t = 0:0.1:2*pi;
+>> clf; plot(t,cos(t));
+>> print cos.eps
+>> print cos.png
+>> pwd
+ans = /home/alanreaven
+>> t = -2*pi:0.1:2*pi;
+>> y = -cos(3*t)
+y =
+
+ Columns 1 through 14:
+
+  -1.0000e+00  -9.5534e-01  -8.2534e-01  -6.2161e-01  -3.6236e-01  -7.0737e-02   2.2720e-01   5.0485e-01   7.3739e-01   9.0407e-01   9.8999e-01   9.8748e-01   8.9676e-01   7.2593e-01
+
+ Columns 15 through 28:
+
+   4.9026e-01   2.1080e-01  -8.7499e-02  -3.7798e-01  -6.3469e-01  -8.3471e-01  -9.6017e-01  -9.9986e-01  -9.5023e-01  -8.1573e-01  -6.0835e-01  -3.4664e-01  -5.3955e-02   2.4354e-01
+
+ Columns 29 through 42:
+
+   5.1929e-01   7.4865e-01   9.1113e-01   9.9223e-01   9.8469e-01   8.8919e-01   7.1427e-01   4.7554e-01   1.9433e-01  -1.0424e-01  -3.9349e-01  -6.4760e-01  -8.4385e-01  -9.6473e-01
+
+ Columns 43 through 56:
+
+  -9.9943e-01  -9.4486e-01  -8.0588e-01  -5.9492e-01  -3.3081e-01  -3.7158e-02   2.5982e-01   5.3358e-01   7.5969e-01   9.1793e-01   9.9418e-01   9.8162e-01   8.8137e-01   7.0240e-01
+
+ Columns 57 through 70:
+
+   4.6068e-01   1.7781e-01  -1.2094e-01  -4.0889e-01  -6.6032e-01  -8.5276e-01  -9.6902e-01  -9.9873e-01  -9.3922e-01  -7.9581e-01  -5.8132e-01  -3.1490e-01  -2.0351e-02   2.7602e-01
+
+ Columns 71 through 84:
+
+   5.4773e-01   7.7051e-01   9.2447e-01   9.9585e-01   9.7827e-01   8.7330e-01   6.9033e-01   4.4569e-01   1.6124e-01  -1.3762e-01  -4.2418e-01  -6.7285e-01  -8.6142e-01  -9.7304e-01
+
+ Columns 85 through 98:
+
+  -9.9774e-01  -9.3332e-01  -7.8552e-01  -5.6756e-01  -2.9890e-01  -3.5375e-03   2.9214e-01   5.6172e-01   7.8112e-01   9.3075e-01   9.9724e-01   9.7465e-01   8.6499e-01   6.7807e-01
+
+ Columns 99 through 112:
+
+   4.3058e-01   1.4462e-01  -1.5425e-01  -4.3935e-01  -6.8519e-01  -8.6984e-01  -9.7678e-01  -9.9647e-01  -9.2715e-01  -7.7500e-01  -5.5363e-01  -2.8281e-01   1.3277e-02   3.0818e-01
+
+ Columns 113 through 126:
+
+   5.7555e-01   7.9151e-01   9.3677e-01   9.9835e-01   9.7075e-01   8.5643e-01   6.6561e-01   4.1534e-01   1.2796e-01  -1.7084e-01  -4.5439e-01  -6.9734e-01  -8.7801e-01  -9.8024e-01
+
+>> y = -cos(3*t);
+>> function x = discreta(t)
+end
+>> help prime
+error: help: 'prime' not found
+>> isprime
+error: Invalid call to isprime.  Correct usage is:
+
+ -- TF = isprime (X)
+
+Additional help for built-in functions and operators is
+available in the online version of the manual.  Use the command
+'doc <topic>' to search the manual index.
+
+Help and information about Octave is also available on the WWW
+at https://www.octave.org and via the help@octave.org
+mailing list.
+>> help isprime
+'isprime' is a function from the file /usr/share/octave/9.4.0/m/specfun/isprime.m
+
+ -- TF = isprime (X)
+     Return a logical array which is true where the elements of X are
+     prime numbers and false where they are not.
+
+     A prime number is conventionally defined as a positive integer
+     greater than 1 (e.g., 2, 3, ...) which is divisible only by itself
+     and 1.  Octave extends this definition to include both negative
+     integers and complex values.  A negative integer is prime if its
+     positive counterpart is prime.  This is equivalent to ‘isprime (abs
+     (x))’.
+
+     If ‘class (X)’ is complex, then primality is tested in the domain
+     of Gaussian integers
+     (<https://en.wikipedia.org/wiki/Gaussian_integer>).  Some
+     non-complex integers are prime in the ordinary sense, but not in
+     the domain of Gaussian integers.  For example, 5 = (1+2i)*(1-2i)
+     shows that 5 is not prime because it has a factor other than itself
+     and 1.  Exercise caution when testing complex and real values
+     together in the same matrix.
+
+     Examples:
+
+          isprime (1:6)
+            ⇒  0  1  1  0  1  0
+
+          isprime ([i, 2, 3, 5])
+            ⇒  0  0  1  0
+
+     Programming Note: ‘isprime’ is suitable for all X in the range
+     abs(X) < 2^64.  Cast inputs larger than ‘flintmax’ to ‘uint64’.
+
+     For larger inputs, use ‘sym’ if you have the Symbolic package
+     installed and loaded:
+
+          isprime (sym ('58745389709258902525390450') + (0:4))
+             ⇒  0  1  0  0  0
+
+     Compatibility Note: MATLAB does not extend the definition of prime
+     numbers and will produce an error if given negative or complex
+     inputs.
+
+     See also: primes, factor, gcd, lcm.
+
+Additional help for built-in functions and operators is
+available in the online version of the manual.  Use the command
+'doc <topic>' to search the manual index.
+
+Help and information about Octave is also available on the WWW
+at https://www.octave.org and via the help@octave.org
+mailing list.
+>> y = -2*cos(5*t)
+y =
+
+ Columns 1 through 14:
+
+  -2.0000e+00  -1.7552e+00  -1.0806e+00  -1.4147e-01   8.3229e-01   1.6023e+00   1.9800e+00   1.8729e+00   1.3073e+00   4.2159e-01  -5.6732e-01  -1.4173e+00  -1.9203e+00  -1.9532e+00
+
+ Columns 15 through 28:
+
+  -1.5078e+00  -6.9327e-01   2.9100e-01   1.2040e+00   1.8223e+00   1.9943e+00   1.6781e+00   9.5107e-01  -8.8514e-03  -9.6661e-01  -1.6877e+00  -1.9956e+00  -1.8149e+00  -1.1898e+00
+
+ Columns 29 through 42:
+
+  -2.7347e-01   7.0985e-01   1.5194e+00   1.9569e+00   1.9153e+00   1.4048e+00   5.5033e-01  -4.3888e-01  -1.3206e+00  -1.8790e+00  -1.9774e+00  -1.5916e+00  -8.1616e-01   1.5913e-01
+
+ Columns 43 through 56:
+
+   1.0955e+00   1.7636e+00   1.9999e+00   1.7466e+00   1.0657e+00   1.2381e-01  -8.4836e-01  -1.6128e+00  -1.9824e+00  -1.8666e+00  -1.2938e+00  -4.0427e-01   5.8428e-01   1.4298e+00
+
+ Columns 57 through 70:
+
+   1.9252e+00   1.9493e+00   1.4961e+00   6.7664e-01  -3.0850e-01  -1.2181e+00  -1.8295e+00  -1.9929e+00  -1.6684e+00  -9.3546e-01   2.6553e-02   9.8207e-01   1.6971e+00   1.9967e+00
+
+ Columns 71 through 84:
+
+   1.8074e+00   1.1756e+00   2.5593e-01  -7.2637e-01  -1.5308e+00  -1.9605e+00  -1.9101e+00  -1.3921e+00  -5.3329e-01   4.5613e-01   1.3339e+00   1.8850e+00   1.9747e+00   1.5808e+00
+
+ Columns 85 through 98:
+
+   7.9997e-01  -1.7677e-01  -1.1102e+00  -1.7719e+00  -1.9997e+00  -1.7379e+00  -1.0506e+00  -1.0614e-01   8.6436e-01   1.6232e+00   1.9847e+00   1.8602e+00   1.2803e+00   3.8692e-01
+
+ Columns 99 through 112:
+
+  -6.0119e-01  -1.4421e+00  -1.9299e+00  -1.9453e+00  -1.4843e+00  -6.5995e-01   3.2598e-01   1.2321e+00   1.8366e+00   1.9914e+00   1.6586e+00   9.1978e-01  -4.4254e-02  -9.9745e-01
+
+ Columns 113 through 126:
+
+  -1.7064e+00  -1.9976e+00  -1.7997e+00  -1.1612e+00  -2.3836e-01   7.4284e-01   1.5422e+00   1.9639e+00   1.9048e+00   1.3794e+00   5.1620e-01  -4.7335e-01  -1.3470e+00  -1.8909e+00
+
+>> y = -2*cos(5*t);
+>> plot(t,y);
+>> t = 0:100:1
+t = 0
+>> t = 0:1:199
+t =
+
+ Columns 1 through 31:
+
+     0     1     2     3     4     5     6     7     8     9    10    11    12    13    14    15    16    17    18    19    20    21    22    23    24    25    26    27    28    29    30
+
+ Columns 32 through 62:
+
+    31    32    33    34    35    36    37    38    39    40    41    42    43    44    45    46    47    48    49    50    51    52    53    54    55    56    57    58    59    60    61
+
+ Columns 63 through 93:
+
+    62    63    64    65    66    67    68    69    70    71    72    73    74    75    76    77    78    79    80    81    82    83    84    85    86    87    88    89    90    91    92
+
+ Columns 94 through 124:
+
+    93    94    95    96    97    98    99   100   101   102   103   104   105   106   107   108   109   110   111   112   113   114   115   116   117   118   119   120   121   122   123
+
+ Columns 125 through 155:
+
+   124   125   126   127   128   129   130   131   132   133   134   135   136   137   138   139   140   141   142   143   144   145   146   147   148   149   150   151   152   153   154
+
+ Columns 156 through 186:
+
+   155   156   157   158   159   160   161   162   163   164   165   166   167   168   169   170   171   172   173   174  
