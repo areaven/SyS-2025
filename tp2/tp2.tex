@@ -1,0 +1,63 @@
+\documentclass[11pt]{article}
+\usepackage{graphicx}
+\graphicspath{
+        {../img}
+}
+\newcommand{\rta}{\\}
+\usepackage [spanish]{babel}
+\title{
+    \includegraphics[width=0.25\textwidth]{unpsjb_notext.png} \\
+    \vspace{1.5cm}
+    Señales y Sistemas \\ 
+    Trabajo Práctico 2
+    }
+\date {Primer Cuatrimestre 2025}
+\author{Alan Gustavo Bitsch}
+
+
+
+\begin{document}
+\maketitle
+
+
+
+\section{Señales y Sistemas: conceptos básicos}
+Explique con sus propias palabras las definiciones de
+\begin{enumerate}
+    \item Señal:
+    \rta Una señal es una función que nos describe una magnitud de interés de un sistema.
+    
+    \item Variable dependiente e independiente:
+    \rta Una variable independiente es aquella que no depende de ninguna otra variable. En contraste, una variable dependiente es aquella que depende de una o más variables en su definición.
+    
+    \item Tiempo continuo y tiempo discreto:
+    \rta El tiempo discreto es aquel que está discretizado, por lo que avanza de a pasos y solo puede tomar una cantidad finita de valores para un intervalo finito.
+    \rta El tiempo continuo, al no estar discretizado, es infinitamente divisible en conjuntos más pequeños. Un tiempo continuo en un intervalo finito puede tomar infinitos valores.
+    
+    \item Muestreo:
+    \rta Se refiere al proceso de tomar una señal de tiempo continuo y(t) y convertirla en una señal de tiempo discreto y[t] al evaluarla en intervalos de tiempo regulares. 
+    
+    \item Cuantización:
+    \rta Es el proceso de tomar el valor de tiempo de cada medición y truncarlo o redondearlo, para que y[t] quede definida para números naturales.   
+    
+    \item Entradas y salidas de un sistema (también llamada interface)
+    \rta Las entradas y salidas de un sistema son señales. Las entradas, al ser procesadas, se convierten en la salida del sistema; Por esto podemos decir que las entradas son aquellas que estimulan el sistema, y las salidas son la respuesta del sistema al estímulo.
+    \rta Definimos interfaz de entrada y de salida al conjunto de señales (de entrada y de salida) de un sistema.
+    
+    \item Sistemas estáticos y dinámicos:
+    \rta Decimos que un sistema es estático (o sin memoria) cuando la salida del mismo para una entrada es independiente de los valores pasados o futuros de entrada. La salida permanece igual dada una misma entrada.
+    \rta Por el contrario, un sistema dinámico es aquel que sí tiene memoria: su evolución depende de las entradas previas o posteriores, por lo que su salida puede variar para la misma entrada.
+
+    \item sistemas lineales:
+    \rta Los sistemas lineales son aquellos que cumplen con la condición de linealidad: 
+        f es lineal si $f(\alpha x_1 + \beta x_2)
+    =\alpha f(x_1) + \beta f(x_2)$
+    \item sistemas invariantes con el tiempo:
+    \rta Los sistemas invariantes con el tiempo son aquellos cuyo comportamiento no es dependiente del tiempo o, lo que es lo mismo,
+        \\ $f(t) = f(t+t_0)$ para todo $t_0$
+
+\end{enumerate}
+
+
+
+\end{document}
